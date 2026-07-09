@@ -1,21 +1,32 @@
 "use client";
+
 import { useTheme } from "next-themes";
-import { Moon, Sun, Bell, Search } from "lucide-react";
-import { useState } from "react";
-import { cn } from "@/lib/utils";
+import { Moon, Sun, Bell } from "lucide-react";
+import { useState, useEffect } from "react";
 
 export default function Header({ title }) {
   const { theme, setTheme } = useTheme();
-  const [searchOpen, setSearchOpen] = useState(false);
+
+  const [currentDate, setCurrentDate] = useState("");
+
+  useEffect(() => {
+    setCurrentDate(
+      new Date().toLocaleDateString("uz-UZ", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      })
+    );
+  }, []);
 
   return (
     <header className="sticky top-0 z-30 flex items-center justify-between border-b border-border bg-background/80 px-6 py-4 backdrop-blur-md">
       <div>
         <h1 className="text-xl font-bold text-foreground">{title}</h1>
+
         <p className="text-xs text-muted-foreground">
-          {new Date().toLocaleDateString("uz-UZ", {
-            weekday: "long", year: "numeric", month: "long", day: "numeric",
-          })}
+          {currentDate}
         </p>
       </div>
 
