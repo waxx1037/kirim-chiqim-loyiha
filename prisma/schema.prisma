@@ -1,0 +1,81 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      String   @default("admin")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+model IncomeCategory {
+  id        String   @id @default(cuid())
+  name      String
+  color     String   @default("#10B981")
+  icon      String   @default("tag")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  incomes   Income[]
+
+  @@map("income_categories")
+}
+
+model ExpenseCategory {
+  id        String    @id @default(cuid())
+  name      String
+  color     String    @default("#EF4444")
+  icon      String    @default("tag")
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  expenses  Expense[]
+
+  @@map("expense_categories")
+}
+
+model Income {
+  id          String         @id @default(cuid())
+  amount      Float
+  description String?
+  date        DateTime       @default(now())
+  categoryId  String
+  category    IncomeCategory @relation(fields: [categoryId], references: [id])
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  @@map("incomes")
+}
+
+model Expense {
+  id          String          @id @default(cuid())
+  amount      Float
+  description String?
+  date        DateTime        @default(now())
+  categoryId  String
+  category    ExpenseCategory @relation(fields: [categoryId], references: [id])
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  @@map("expenses")
+}
+
+model Settings {
+  id          String   @id @default(cuid())
+  companyName String   @default("Mening Kompaniyam")
+  currency    String   @default("UZS")
+  theme       String   @default("light")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("settings")
+}
